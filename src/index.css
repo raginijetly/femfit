@@ -1,0 +1,134 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+@import "tailwindcss";
+
+@theme {
+  /* HerFitness brand colors */
+  --color-brand-light: #decaf2;
+  --color-brand-medium: #ccadeb;
+  --color-brand-dark: #b385e0;
+}
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 255 255 255;
+  --card: 0 0% 100%;
+  --card-foreground: 224 71.4% 4.1%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 224 71.4% 4.1%;
+  --primary: 262.1 83.3% 57.8%;
+  --primary-foreground: 210 20% 98%;
+  --secondary: 220 14.3% 95.9%;
+  --secondary-foreground: 220.9 39.3% 11%;
+  --muted: 220 14.3% 95.9%;
+  --muted-foreground: 220 8.9% 46.1%;
+  --accent: 220 14.3% 95.9%;
+  --accent-foreground: 220.9 39.3% 11%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 20% 98%;
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
+  --ring: 262.1 83.3% 57.8%;
+  --radius: 0.5rem;
+
+  /* HerFitness brand colors */
+  --brand-purple-light: 270 60% 87%;
+  --brand-purple-medium: 270 60% 80%;
+  --brand-purple: 270 60% 70%;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  color: rgb(var(--foreground));
+  background: linear-gradient(
+    135deg,
+    hsl(var(--brand-purple-light)),
+    hsl(var(--brand-purple))
+  );
+  min-height: 100vh;
+}
+
+/* HerFitness Custom Styles */
+.gradient-primary {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--brand-purple-medium)),
+    hsl(var(--brand-purple))
+  );
+}
+
+.text-gradient-primary {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--brand-purple-medium)),
+    hsl(var(--brand-purple))
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Button styles */
+.btn-primary {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--brand-purple-medium)),
+    hsl(var(--brand-purple))
+  );
+  color: white;
+  transition: opacity 0.2s ease;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+/* Continue button style was reverted as per user request */
+
+/* Custom input styles */
+.custom-date-input::-webkit-calendar-picker-indicator {
+  filter: invert(0.5) sepia(1) saturate(5) hue-rotate(260deg);
+  cursor: pointer;
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  /* Optimized for iPhone and similar devices */
+  body {
+    font-size: 14px;
+  }
+
+  /* Improved touch targets for better mobile UX */
+  button,
+  a,
+  label,
+  [role="button"],
+  .cursor-pointer {
+    touch-action: manipulation;
+  }
+
+  /* Improved form controls */
+  input,
+  select,
+  textarea {
+    font-size: 16px; /* Prevents iOS zoom on focus */
+  }
+
+  /* Custom border for tab indicators */
+  .border-b-3 {
+    border-bottom-width: 3px;
+  }
+
+  /* Improve spacing for stackable elements */
+  .space-y-2 > * + * {
+    margin-top: 0.6rem;
+  }
+
+  /* iPhone-specific fixes */
+  @supports (-webkit-touch-callout: none) {
+    /* Fixes for iOS devices */
+    .min-h-screen {
+      min-height: -webkit-fill-available;
+    }
+  }
+}
