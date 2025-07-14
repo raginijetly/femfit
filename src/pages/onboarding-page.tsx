@@ -187,7 +187,7 @@ const OnboardingPage: React.FC = () => {
           </div>
           <Progress
             value={getCompletionPercentage()}
-            className="h-2 bg-purple-200"
+            className="h-2 bg-purple-200 text-red-500"
           />
         </div>
       )}
@@ -260,7 +260,37 @@ const OnboardingPage: React.FC = () => {
               }
             }}
             disabled={
-              !onboardingAnswers[onboardingQuestions[currentStep - 1].key]
+              // !onboardingAnswers[onboardingQuestions[currentStep - 1].key]
+              ((): boolean => {
+                const currentQuestionsKeys = onboardingQuestions.filter(
+                  (el) => el.stage === currentStep,
+                );
+                let isEmpty = false;
+                currentQuestionsKeys.forEach((item) => {
+                  if (
+                    item &&
+                    (onboardingAnswers[item.key] === undefined ||
+                      onboardingAnswers[item.key] === null ||
+                      onboardingAnswers[item.key] === "" ||
+                      (Array.isArray(onboardingAnswers[item.key]) &&
+                        ((onboardingAnswers[item.key] as string[])?.length ===
+                          0 ||
+                          (onboardingAnswers[item.key] as string[]).includes(
+                            "",
+                          ))))
+                  ) {
+                    isEmpty = true;
+                  }
+                });
+                console.log("isEmpty", isEmpty);
+                // console.log("current Question", currentQuestionsKeys);
+                // console.log("Onboarding answers", onboardingAnswers);
+                console.log(
+                  "dietaryPreferences",
+                  onboardingAnswers.dietaryPreferences,
+                );
+                return isEmpty;
+              })()
             }
           >
             Continue

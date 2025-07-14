@@ -1,7 +1,26 @@
 import { LogOut, User } from "lucide-react";
 import { Button } from "./ui/button";
+import { fetchData } from "@/utils/commonFunction";
+import { BACKEND_API_URL } from "@/utils/constants";
+import { useNavigate } from "react-router-dom";
 
 const Header: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetchData("get", `${BACKEND_API_URL}/auth/logout`);
+      if (response.status === 200) {
+        console.log("Logout successful");
+        navigate("/auth");
+      } else {
+        console.error("Logout failed:", response.data);
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
+
   return (
     <header className="bg-brand-dark/60 fixed top-0 z-5 w-full backdrop-blur-sm">
       <div className="container mx-auto flex items-center justify-between px-4 py-4">
@@ -11,6 +30,7 @@ const Header: React.FC = () => {
             <Button
               variant="ghost"
               className="rounded-full border border-white/20 bg-white/10 p-2 text-white hover:bg-white/20"
+              onClick={handleLogout}
             >
               <User className="h-6 w-6" />
             </Button>
@@ -20,7 +40,7 @@ const Header: React.FC = () => {
               <div className="py-2">
                 <button
                   className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-800"
-                  // onClick={handleLogout}
+                  onClick={handleLogout}
                 >
                   <LogOut className="h-4 w-4" />
                   Logout

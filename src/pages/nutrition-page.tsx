@@ -38,7 +38,9 @@ const NutritionPage: React.FC = () => {
 
           <div className="p-8 text-center">
             <div className="mx-auto max-w-md">
-              <h3 className="mb-4 text-xl font-semibold">Coming Soon</h3>
+              <h3 className="text-brand-dark mb-4 text-3xl font-semibold">
+                Coming Soon
+              </h3>
               <p className="mb-6 text-gray-600">
                 Nutrition features will be available in the next update. When
                 launched, you'll have access to:

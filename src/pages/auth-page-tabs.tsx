@@ -96,11 +96,12 @@ export default function AuthPage() {
           confirmPassword,
         },
       );
+      console.log("response", response);
       if (response.status === 200) {
         clearAllFields();
         setError([]);
         setLoading(false);
-        if (response.data.completedOnboarding) navigate("/");
+        if (response.completedOnboarding) navigate("/");
         else navigate("/onboarding");
       } else {
         setError([]);

@@ -14,7 +14,7 @@ const OnboardingQuestionCard: React.FC<{
   placeholder?: string;
   label?: string;
   options?: { value: string; title: string; text?: string }[];
-  setNumberInput?: (value: number) => void;
+  setNumberInput?: (value: number | undefined) => void;
   setDateInput?: (value: Date | "idk" | undefined) => void;
   setSingleSelect?: (value: string) => void;
   setMultiSelect?: (value: string[]) => void;
@@ -95,7 +95,7 @@ const NumberInputCard: React.FC<{
   questionKey: string;
   placeholder?: string;
   label?: string;
-  setNumberInput?: (value: number) => void;
+  setNumberInput?: (value: number | undefined) => void;
 }> = (props) => {
   const [num, setNum] = useState<number | undefined>(undefined);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -122,7 +122,8 @@ const NumberInputCard: React.FC<{
         onChange={(e) => {
           const value = e.target.valueAsNumber;
           setNum(Number.isNaN(value) ? undefined : value);
-          if (props?.setNumberInput) props.setNumberInput(value);
+          if (props?.setNumberInput)
+            props.setNumberInput(Number.isNaN(value) ? undefined : value);
         }}
         placeholder={props?.placeholder}
         className="text-brand-dark shadow-brand-text-brand-dark/25 placeholder:text-brand-dark/50 border-2 border-white bg-white py-6 text-center text-lg shadow-md"
@@ -273,9 +274,11 @@ const MultiSelectCard: React.FC<{
         return prev.includes("none") ? [] : ["none"];
       }
 
-      if (option === "other") setOtherText("");
-
-      if (!!otherText) selected.push(otherText);
+      if (option === "other") {
+        setOtherText("");
+        if (selected.includes("other") && !otherText) selected.push("");
+        else selected.splice(selected.indexOf(""), 1);
+      }
 
       if (props?.setMultiSelect) {
         props.setMultiSelect(selected.filter((item) => item !== "none"));
@@ -285,6 +288,7 @@ const MultiSelectCard: React.FC<{
   };
   const [otherText, setOtherText] = useState<string>("");
   const otherInputRef = useRef<HTMLInputElement>(null);
+  console.log("Selected Options:", selectedOptions);
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-5 overflow-y-auto">
       {props.options.map((item) => (
@@ -315,12 +319,19 @@ const MultiSelectCard: React.FC<{
           onChange={(e) => {
             setOtherText(e.target.value);
             if (props?.setMultiSelect) {
-              props.setMultiSelect?.(
-                !selectedOptions.includes(otherText)
-                  ? [...selectedOptions, e.target.value]
-                  : selectedOptions.map((item) =>
+              props.setMultiSelect(
+                selectedOptions.includes(otherText)
+                  ? selectedOptions.map((item) =>
                       item === otherText ? e.target.value : item,
-                    ),
+                    )
+                  : [...selectedOptions, e.target.value],
+              );
+              setSelectedOptions((prev) =>
+                prev.includes(otherText)
+                  ? prev.map((item) =>
+                      item === otherText ? e.target.value : item,
+                    )
+                  : [...prev, e.target.value],
               );
             }
           }}
