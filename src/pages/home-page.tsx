@@ -380,7 +380,7 @@ const HomePage: React.FC = () => {
           </div>
 
           <div className="flex flex-col space-y-4">
-            {!!user && user.onboardingAnswers.lastPeriod ? (
+            {!!user && user.onboardingAnswers?.lastPeriod ? (
               <>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                   <div className="mb-4 sm:mb-0">
@@ -672,7 +672,7 @@ const HomePage: React.FC = () => {
       </main>
 
       {/* Footer */}
-      <footer className="mt-auto bg-white/10 py-6 pb-16 backdrop-blur-sm sm:pb-6">
+      <footer className="mt-auto bg-white/10 py-6 pb-16 backdrop-blur-sm sm:pb-14">
         <div className="container mx-auto px-4 text-center text-white/80">
           <p>&copy; {new Date().getFullYear()} FemFit. All rights reserved.</p>
           <p className="mt-1 text-sm">Built by Women for Women</p>
