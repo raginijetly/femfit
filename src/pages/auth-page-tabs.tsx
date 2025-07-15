@@ -60,7 +60,7 @@ export default function AuthPage() {
         { email, password },
       );
       if (response.status === 200) {
-        localStorage.setItem("Authorization", `Bearer ${response.token}`);
+        localStorage.setItem("token", response.token);
         clearAllFields();
         setError([]);
         navigate("/onboarding");
@@ -101,7 +101,7 @@ export default function AuthPage() {
         clearAllFields();
         setError([]);
         setLoading(false);
-        localStorage.setItem("Authorization", `Bearer ${response.token}`);
+        localStorage.setItem("token", response.token);
         if (response.completedOnboarding) navigate("/");
         else navigate("/onboarding");
       } else {
