@@ -12,6 +12,7 @@ export async function fetchData(
       data: type !== "get" && data ? data : undefined,
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}` || "",
       },
       withCredentials: true,
     });
