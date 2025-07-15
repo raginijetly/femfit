@@ -101,6 +101,7 @@ export default function AuthPage() {
         clearAllFields();
         setError([]);
         setLoading(false);
+        localStorage.setItem("Authorization", `Bearer ${response.token}`);
         if (response.completedOnboarding) navigate("/");
         else navigate("/onboarding");
       } else {
