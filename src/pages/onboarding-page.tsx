@@ -4,7 +4,10 @@ import { Loader2, CheckCircle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { differenceInDays } from "date-fns";
 import { OnboardingQuestionCard } from "@/components/OnboardingComponents";
-import type { OnboardingQuestionsType } from "@/utils/types";
+import type {
+  OnboardingAnswersType,
+  OnboardingQuestionsType,
+} from "@/utils/types";
 import { useNavigate } from "react-router-dom";
 import { fetchData } from "@/utils/commonFunction";
 import { BACKEND_API_URL, UI_DELAY } from "@/utils/constants";
@@ -24,6 +27,21 @@ const OnboardingPage: React.FC = () => {
   const [totalSteps, setTotalSteps] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
 
+  const extractAndSetOnboardingAnswers = (
+    questions: OnboardingQuestionsType[],
+  ): OnboardingAnswersType => {
+    const answers: {
+      [key: string]: number | string | string[] | Date | undefined;
+    } = {};
+    questions?.forEach((question) => {
+      if (question.answer !== undefined) {
+        answers[question.key] = question.answer;
+      }
+    });
+    setOnboardingAnswers(answers);
+    return answers;
+  };
+
   useEffect(() => {
     const fetchOnboardingQuestions = async () => {
       try {
@@ -39,6 +57,9 @@ const OnboardingPage: React.FC = () => {
           setTotalSteps(response.data.totalQuestions);
           if (response.data.completedOnboarding === true) {
             // navigate("/");
+            const ans = extractAndSetOnboardingAnswers(response.data.questions);
+            // Calculate cycle info based on last period date
+            calculateCycleInfo(ans.lastPeriod as Date | undefined);
             setCurrentStep(response.data.totalQuestions + 1); // Set to completion step
           }
           setLoading(false);

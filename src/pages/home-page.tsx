@@ -383,7 +383,7 @@ const HomePage: React.FC = () => {
             {!!user && user.onboardingAnswers?.lastPeriod ? (
               <>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                  <div className="mb-4 sm:mb-0">
+                  <div className="">
                     <span className="text-sm text-gray-500">Current phase</span>
                     <div className="flex items-center">
                       {getPhaseIcon()}
@@ -421,18 +421,18 @@ const HomePage: React.FC = () => {
                       </span>
                     </div>
                   </div>
-                  <div className="mb-4 sm:mb-0">
+                  {/* <div className="mb-4 sm:mb-0">
                     <span className="text-sm text-gray-500">Next phase in</span>
                     <div className="flex items-center">
                       <span className="text-lg font-medium text-gray-800">
                         {!!userInfo && userInfo.nextPhaseIn} days
                       </span>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
                 <div>
-                  <div className="mb-1 flex justify-between text-xs text-gray-500">
+                  {/* <div className="mb-1 flex justify-between text-xs text-gray-500">
                     <span>Day 1</span>
                     <span>Day 28</span>
                   </div>
@@ -443,15 +443,15 @@ const HomePage: React.FC = () => {
                         width: `${!!userInfo && userInfo.cyclePercentage}%`,
                       }}
                     ></div>
-                  </div>
-                  // Hormone Levels Section
-                  <div className="mt-6">
+                  </div> */}
+                  {/* // Hormone Levels Section */}
+                  <div className="mt-2">
                     <h4 className="mb-3 text-sm font-medium text-gray-700">
                       HORMONE LEVELS
                     </h4>
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                      // Estrogen
-                      <div className="max-h-28 min-h-[5rem]">
+                    <div className="flex flex-col gap-6 sm:flex-row sm:gap-10">
+                      {/* // Estrogen */}
+                      <div className="max-h-28 w-full">
                         <div className="mb-1 flex items-center justify-between">
                           <span className="text-sm font-medium text-pink-500">
                             Estrogen
@@ -468,8 +468,8 @@ const HomePage: React.FC = () => {
                           Peaks during ovulation, boosting energy
                         </p>
                       </div>
-                      // Progesterone
-                      <div className="max-h-28 min-h-[5rem]">
+                      {/* // Progesterone */}
+                      <div className="max-h-28 w-full">
                         <div className="mb-1 flex items-center justify-between">
                           <span className="text-sm font-medium text-blue-400">
                             Progesterone
@@ -478,7 +478,7 @@ const HomePage: React.FC = () => {
                         </div>
                         <div className="h-2 w-full overflow-hidden rounded-full bg-blue-50">
                           <div
-                            className="h-full rounded-full bg-gradient-to-r from-blue-100 to-blue-200"
+                            className="h-full rounded-full bg-gradient-to-r from-blue-100 to-blue-300"
                             style={{ width: "40%" }}
                           ></div>
                         </div>
@@ -486,8 +486,8 @@ const HomePage: React.FC = () => {
                           Low during ovulation, rises in luteal phase
                         </p>
                       </div>
-                      // Testosterone
-                      <div className="max-h-28 min-h-[5rem]">
+                      {/* // Testosterone */}
+                      <div className="max-h-28 w-full">
                         <div className="mb-1 flex items-center justify-between">
                           <span className="text-sm font-medium text-amber-500">
                             Testosterone
@@ -496,7 +496,7 @@ const HomePage: React.FC = () => {
                         </div>
                         <div className="h-2 w-full overflow-hidden rounded-full bg-amber-50">
                           <div
-                            className="h-full rounded-full bg-gradient-to-r from-amber-100 to-amber-200"
+                            className="h-full rounded-full bg-gradient-to-r from-amber-100 to-amber-300"
                             style={{ width: "70%" }}
                           ></div>
                         </div>
@@ -506,6 +506,9 @@ const HomePage: React.FC = () => {
                       </div>
                     </div>
                   </div>
+                  <Button className="gradient-primary mt-6 w-full hover:opacity-90">
+                    Know more about your cycle
+                  </Button>
                 </div>
               </>
             ) : (
