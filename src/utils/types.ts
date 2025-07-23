@@ -13,6 +13,7 @@ export interface OnboardingQuestionsType {
     title: string; // The title of the option to be displayed
     text?: string; // Additional text for the option, displayed below the title
   }[];
+  answer?: number | string | string[] | Date | undefined; // The answer to the question, can be number, string, array of strings, or date
 }
 
 export interface OnboardingAnswersType {

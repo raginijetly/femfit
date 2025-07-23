@@ -36,7 +36,10 @@ const OnboardingQuestionCard: React.FC<{
     case "date":
       return (
         <OnboardingQuestionWraper question={props.question} text={props?.text}>
-          <DateCard setDateInput={props?.setDateInput} />
+          <DateCard
+            setDateInput={props?.setDateInput}
+            placeholder={props?.placeholder}
+          />
         </OnboardingQuestionWraper>
       );
     case "singleSelect":
@@ -136,10 +139,11 @@ const NumberInputCard: React.FC<{
 };
 
 const DateCard: React.FC<{
-  setDateInput?: (value: Date | "idk" | undefined) => void;
+  placeholder?: string;
+  setDateInput?: (value: Date | undefined) => void;
 }> = (props) => {
   const [idk, setIdk] = useState<boolean>(false);
-  const [dateVal, setDateVal] = useState<Date | "idk" | undefined>(undefined);
+  const [dateVal, setDateVal] = useState<Date | undefined>(undefined);
   return (
     <>
       {!idk ? (
@@ -153,7 +157,7 @@ const DateCard: React.FC<{
             <div className="flex w-full justify-center">
               <Calendar
                 mode="single"
-                selected={dateVal === "idk" ? undefined : dateVal}
+                selected={dateVal}
                 onSelect={(date) => {
                   setDateVal(date);
                   if (props?.setDateInput) props.setDateInput(date);
@@ -168,13 +172,19 @@ const DateCard: React.FC<{
               />
             </div>
 
-            {dateVal && dateVal !== "idk" && (
+            {dateVal && (
               <p className="py-2 text-center text-lg font-semibold text-purple-700">
                 Selected: {format(dateVal, "MMMM d, yyyy")}
               </p>
             )}
 
-            <Button
+            {props?.placeholder && (
+              <p className="rounded-lg border-2 border-purple-700/50 p-2 text-center text-sm text-purple-700">
+                {props.placeholder}
+              </p>
+            )}
+
+            {/* <Button
               variant="ghost"
               className="h-8 min-h-8 w-fit rounded-lg border-2 border-purple-700 px-6 text-xs text-purple-700"
               onClick={() => {
@@ -184,7 +194,7 @@ const DateCard: React.FC<{
               }}
             >
               I don't know my last period date
-            </Button>
+            </Button> */}
           </div>
         </div>
       ) : (
@@ -335,7 +345,7 @@ const MultiSelectCard: React.FC<{
               );
             }
           }}
-          className="w-full border-2 border-purple-700 bg-transparent px-3 py-5 text-xs text-purple-700 placeholder-purple-700 select-none"
+          className="w-full border-2 border-purple-700 bg-white px-3 py-5 text-xs text-purple-700 placeholder-purple-700 select-none"
         />
       )}
     </div>
