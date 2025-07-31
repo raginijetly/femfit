@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, Loader2, User } from "lucide-react";
-import { fetchData, parseOnboardingAnswers } from "@/utils/commonFunction";
+import { ArrowLeft, ArrowRight, Loader2, User } from "lucide-react";
+import {
+  fetchData,
+  getOthersAnswer,
+  parseOnboardingAnswers,
+} from "@/utils/commonFunction";
 import { BACKEND_API_URL, UI_DELAY } from "@/utils/constants";
 import { useNavigate } from "react-router-dom";
 import {
@@ -140,6 +144,10 @@ const UpdatePage: React.FC = () => {
               label={currentQuestion?.label}
               options={currentQuestion?.options || []}
               answer={currentQuestion?.answer}
+              otherTextAnswer={getOthersAnswer(
+                currentQuestion.options,
+                currentQuestion.answer as string[],
+              )}
               setNumberInput={(value) =>
                 setCurrentAnswer({
                   [currentQuestion.key]: value ?? "",
@@ -180,6 +188,24 @@ const UpdatePage: React.FC = () => {
               <Button
                 className="bg-purple-50 text-purple-900 hover:bg-transparent"
                 onClick={updateAnswer}
+                disabled={((): boolean => {
+                  if (
+                    !!currentQuestion &&
+                    !!currentAnswer &&
+                    (currentAnswer[currentQuestion.key] === undefined ||
+                      currentAnswer[currentQuestion.key] === null ||
+                      currentAnswer[currentQuestion.key] === "" ||
+                      (Array.isArray(currentAnswer[currentQuestion.key]) &&
+                        ((currentAnswer[currentQuestion.key] as string[])
+                          ?.length === 0 ||
+                          (
+                            currentAnswer[currentQuestion.key] as string[]
+                          ).includes(""))))
+                  ) {
+                    return true;
+                  }
+                  return false;
+                })()}
               >
                 Update
               </Button>
@@ -190,12 +216,12 @@ const UpdatePage: React.FC = () => {
       {/* Main content */}
       <main className="container mx-auto px-4 pt-24 pb-10 sm:pb-8">
         {/* User greeting */}
-        <div className="mb-8">
+        <div className="-mt-3 mb-8 flex flex-col-reverse items-center justify-between gap-5 sm:mt-2 sm:flex-row sm:gap-0">
           <div className="mb-2 flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/20">
               <User className="h-6 w-6 text-white" />
             </div>
-            <div>
+            <div className="shrink-0">
               <h2 className="text-xl font-semibold text-white">
                 Hey, {user?.fullName}!
               </h2>
@@ -204,6 +230,13 @@ const UpdatePage: React.FC = () => {
               </p>
             </div>
           </div>
+          <Button
+            variant="ghost"
+            className="ml-auto px-3 py-2 text-lg text-white hover:bg-white/10"
+            onClick={() => navigate("/")}
+          >
+            <ArrowLeft className="mr-1 size-4" /> Go Back to Home Page
+          </Button>
         </div>
         {/* Onboarding Questions */}
         <div className="mb-14 grid grid-cols-1 gap-6 sm:grid-cols-2">

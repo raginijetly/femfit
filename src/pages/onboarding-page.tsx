@@ -269,13 +269,6 @@ const OnboardingPage: React.FC = () => {
                     isEmpty = true;
                   }
                 });
-                console.log("isEmpty", isEmpty);
-                // console.log("current Question", currentQuestionsKeys);
-                // console.log("Onboarding answers", onboardingAnswers);
-                console.log(
-                  "dietaryPreferences",
-                  onboardingAnswers.dietaryPreferences,
-                );
                 return isEmpty;
               })()
             }

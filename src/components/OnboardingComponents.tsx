@@ -14,6 +14,7 @@ const OnboardingQuestionCard: React.FC<{
   label?: string;
   options?: { value: string; title: string; text?: string }[];
   answer?: string | string[] | number;
+  otherTextAnswer?: string;
   setNumberInput?: (value: number | undefined) => void;
   setDateInput?: (value: Date | undefined) => void;
   setSingleSelect?: (value: string) => void;
@@ -60,6 +61,7 @@ const OnboardingQuestionCard: React.FC<{
             options={props?.options ?? [{ value: "", title: "" }]}
             placeholder={props?.placeholder}
             setMultiSelect={props?.setMultiSelect}
+            otherTextAnswer={props?.otherTextAnswer}
             answer={
               Array.isArray(props?.answer)
                 ? props.answer
@@ -247,6 +249,7 @@ const MultiSelectCard: React.FC<{
   options: { value: string; title: string; text?: string }[];
   placeholder?: string;
   answer?: string[];
+  otherTextAnswer?: string;
   setMultiSelect?: (value: string[]) => void;
 }> = (props) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>(
@@ -277,7 +280,9 @@ const MultiSelectCard: React.FC<{
       return selected.filter((item) => item !== "none");
     });
   };
-  const [otherText, setOtherText] = useState<string>("");
+  const [otherText, setOtherText] = useState<string>(
+    props?.otherTextAnswer ?? "",
+  );
   const otherInputRef = useRef<HTMLInputElement>(null);
   console.log("Selected Options:", selectedOptions);
   return (

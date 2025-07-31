@@ -96,3 +96,21 @@ export function parseOnboardingAnswers(
     return acc;
   }, {});
 }
+
+export function getOthersAnswer(
+  options?: { value: string; title: string; text?: string }[],
+  answer?: number | string | string[],
+): string {
+  if (!options || !answer) return "";
+
+  const validValues = new Set(options.map((opt) => opt.value));
+
+  const answerArray: string[] =
+    typeof answer === "string"
+      ? [answer]
+      : Array.isArray(answer)
+        ? answer
+        : [answer.toString()]; // handle number
+
+  return answerArray.filter((ans) => !validValues.has(ans))[0] || "";
+}
