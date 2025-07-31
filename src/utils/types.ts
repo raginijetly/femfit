@@ -13,12 +13,12 @@ export interface OnboardingQuestionsType {
     title: string; // The title of the option to be displayed
     text?: string; // Additional text for the option, displayed below the title
   }[];
-  answer?: number | string | string[] | Date | undefined; // The answer to the question, can be number, string, array of strings, or date
+  answer?: number | string | string[] | undefined; // The answer to the question, can be number, string, array of strings, or date
 }
 
 export interface OnboardingAnswersType {
   age?: number;
-  lastPeriod?: string | "idk";
+  lastPeriod?: string;
   regularPeriod?: "yes" | "no" | "idk";
   currentFitnessLevel?:
     | "justStarting"
@@ -44,13 +44,49 @@ export interface UserType {
 
 export interface UserInfoType {
   cycleDay: number;
-  cyclePhase:
-    | "menstruation"
-    | "follicular"
-    | "ovulation"
-    | "luteal"
-    | "unknown";
+  cyclePhase: CyclePhaseType;
   nextPhaseIn: number; // -1 => unknown
   cyclePercentage: number;
   cycleLength: number; // default 28
 }
+
+export interface PerDayCycleDataType {
+  name: string;
+  overview: string;
+  description: string;
+  superpower: string;
+  fact: string;
+  estrogen: { percentage: number; notes: string };
+  progesterone: { percentage: number; notes: string };
+  testosterone: { percentage: number; notes: string };
+}
+
+export interface PerDayCycleDataObjType {
+  [key: number]: PerDayCycleDataType; // Key is the cycle day as a number
+}
+
+/**
+ * A lookup object for consistent naming of menstrual cycle phases.
+ * Using "as const" makes the object readonly and its properties literal types,
+ * which is excellent for type safety and autocompletion.
+ */
+export const CYCLE_PHASES = {
+  MENSTRUAL: "Menstrual",
+  FOLLICULAR: "Follicular",
+  OVULATORY: "Ovulatory",
+  LUTEAL: "Luteal",
+  PRE_MENSTRUAL: "Pre-Menstrual",
+  AWAITING_CYCLE_START: "Awaiting Cycle Start",
+} as const;
+
+/**
+ * To make it easy to use these values as a type in your application,
+ * you can derive a type directly from the object's values.
+ *
+ * This type will be a union of all possible phase names:
+ * "Menstrual" | "Follicular" | "Ovulatory" | "Luteal" | "Pre-Menstrual" | "Awaiting Cycle Start"
+ */
+export type CyclePhaseType = (typeof CYCLE_PHASES)[keyof typeof CYCLE_PHASES];
+
+// The return type for our function: an object with string keys and string values.
+export type FormattedAnswers = Record<string, string>;

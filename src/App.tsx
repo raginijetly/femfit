@@ -12,6 +12,7 @@ import InfoHubPage from "@/pages/info-hub-page";
 // import { useState, useEffect } from "react";
 import AppFooter from "./components/AppFooter";
 import Header from "./components/Header";
+import UpdatePage from "./pages/update-profile";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function AppContent() {
         <Route path="/" element={<HomePage />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/onboarding" element={<OnboardingPage />} />
+        <Route path="/update" element={<UpdatePage />} />
         <Route path="/symptoms" element={<SymptomsPage />} />
         <Route path="/workout" element={<WorkoutPage />} />
         <Route path="/nutrition" element={<NutritionPage />} />

@@ -10,21 +10,29 @@ import {
   Moon,
   Activity,
   Sun,
+  X,
 } from "lucide-react";
 import { fetchData } from "@/utils/commonFunction";
 import { BACKEND_API_URL, UI_DELAY } from "@/utils/constants";
 import { useNavigate } from "react-router-dom";
 import { differenceInDays } from "date-fns";
-import type { UserInfoType, UserType } from "@/utils/types";
+import {
+  CYCLE_PHASES,
+  type PerDayCycleDataType,
+  type UserInfoType,
+  type UserType,
+} from "@/utils/types";
 
 const HomePage: React.FC = () => {
   const [user, setUser] = useState<UserType | null>(null);
   const [userInfo, setUserInfo] = useState<UserInfoType | null>(null);
+  const [cycleInfo, setCycleInfo] = useState<PerDayCycleDataType | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   // const [cyclePhase, setCyclePhase] = useState<string>("Unknown");
   // State for mood popup
   const [showMoodPopup, setShowMoodPopup] = useState<boolean>(false);
+  const [showKnowMorePopup, setShowKnowMorePopup] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -32,7 +40,10 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     const fetchHomeData = async () => {
       try {
-        const response = await fetchData("get", `${BACKEND_API_URL}/test/home`);
+        const response = await fetchData(
+          "get",
+          `${BACKEND_API_URL}/sections/home`,
+        );
         if (response.status === 200) {
           console.log("Home data fetched successfully:", response);
           // User has not completed onboarding
@@ -40,6 +51,7 @@ const HomePage: React.FC = () => {
           // User is logged in and has completed onboarding
           setUserDetails(response.data.user);
           setUserInfo(response.data.userInfo);
+          setCycleInfo(response.data.cycleInfo);
           setLoading(false);
         } else {
           // User Not logged in
@@ -85,11 +97,26 @@ const HomePage: React.FC = () => {
     ) {
       const timer = setTimeout(() => {
         setShowMoodPopup(true);
-      }, 1); // 5 seconds
+      }, 5000); // 5 seconds
 
       return () => clearTimeout(timer);
     }
   }, [user]);
+
+  // Close the Know More popup when the Escape key is pressed
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setShowKnowMorePopup(false);
+        setShowMoodPopup(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   // Function to handle mood popup click
   const handleMoodSelect = async (
@@ -140,25 +167,25 @@ const HomePage: React.FC = () => {
   // Get workout recommendations based on cycle phase
   const getWorkoutRecommendations = () => {
     switch (userInfo?.cyclePhase) {
-      case "menstruation":
+      case CYCLE_PHASES.MENSTRUAL:
         return [
           "Gentle yoga or stretching",
           "Walking or light cardio",
           "Restorative exercises",
         ];
-      case "follicular":
+      case CYCLE_PHASES.FOLLICULAR:
         return [
           "High-intensity interval training",
           "Strength training",
           "Cardio classes",
         ];
-      case "ovulation":
+      case CYCLE_PHASES.OVULATORY:
         return [
           "Circuit training",
           "Endurance workouts",
           "Group fitness classes",
         ];
-      case "luteal":
+      case CYCLE_PHASES.LUTEAL:
         return [
           "Moderate strength training",
           "Pilates or barre",
@@ -176,25 +203,25 @@ const HomePage: React.FC = () => {
   // Get nutrition recommendations based on cycle phase
   const getNutritionRecommendations = () => {
     switch (userInfo?.cyclePhase) {
-      case "menstruation":
+      case CYCLE_PHASES.MENSTRUAL:
         return [
           "Iron-rich foods (leafy greens, lentils)",
           "Anti-inflammatory foods (berries, nuts)",
           "Stay hydrated with water and herbal teas",
         ];
-      case "follicular":
+      case CYCLE_PHASES.FOLLICULAR:
         return [
           "Complex carbs for energy (oats, brown rice)",
           "Lean proteins (chicken, fish, tofu)",
           "Vitamin B-rich foods (whole grains, eggs)",
         ];
-      case "ovulation":
+      case CYCLE_PHASES.OVULATORY:
         return [
           "Magnesium-rich foods (dark chocolate, avocados)",
           "Antioxidant-rich foods (colorful fruits and vegetables)",
           "Healthy fats (olive oil, nuts, seeds)",
         ];
-      case "luteal":
+      case CYCLE_PHASES.LUTEAL:
         return [
           "Calcium-rich foods (dairy or fortified plant milks)",
           "Fiber-rich foods to reduce bloating (beans, vegetables)",
@@ -215,13 +242,13 @@ const HomePage: React.FC = () => {
   // Choose color theme based on phase
   const getPhaseColor = () => {
     switch (!!userInfo && userInfo.cyclePhase) {
-      case "menstruation":
+      case CYCLE_PHASES.MENSTRUAL:
         return "text-red-600";
-      case "follicular":
+      case CYCLE_PHASES.FOLLICULAR:
         return "text-green-600";
-      case "ovulation":
+      case CYCLE_PHASES.OVULATORY:
         return "text-yellow-600";
-      case "luteal":
+      case CYCLE_PHASES.LUTEAL:
         return "text-blue-600";
       default:
         return "text-purple-600";
@@ -230,13 +257,13 @@ const HomePage: React.FC = () => {
 
   const getPhaseIcon = () => {
     switch (!!userInfo && userInfo.cyclePhase) {
-      case "menstruation":
+      case CYCLE_PHASES.MENSTRUAL:
         return <Moon className={`h-6 w-6 ${getPhaseColor()}`} />;
-      case "follicular":
+      case CYCLE_PHASES.FOLLICULAR:
         return <Activity className={`h-6 w-6 ${getPhaseColor()}`} />;
-      case "ovulation":
+      case CYCLE_PHASES.OVULATORY:
         return <Sun className={`h-6 w-6 ${getPhaseColor()}`} />;
-      case "luteal":
+      case CYCLE_PHASES.LUTEAL:
         return <Moon className={`h-6 w-6 ${getPhaseColor()}`} />;
       default:
         return <Calendar className="h-6 w-6 text-purple-600" />;
@@ -245,20 +272,20 @@ const HomePage: React.FC = () => {
 
   // const getPhaseBackgroundColor = () => {
   //   switch (cyclePhase) {
-  //     case "Menstruation": return "bg-red-50";
-  //     case "Follicular": return "bg-green-50";
-  //     case "Ovulation": return "bg-yellow-50";
-  //     case "Luteal": return "bg-blue-50";
+  //     case CYCLE_PHASES.MENSTRUAL: return "bg-red-50";
+  //     case CYCLE_PHASES.FOLLICULAR: return "bg-green-50";
+  //     case CYCLE_PHASES.OVULATORY: return "bg-yellow-50";
+  //     case CYCLE_PHASES.LUTEAL: return "bg-blue-50";
   //     default: return "bg-purple-50";
   //   }
   // };
 
   // const getPhaseBorderColor = () => {
   //   switch (cyclePhase) {
-  //     case "Menstruation": return "border-red-100";
-  //     case "Follicular": return "border-green-100";
-  //     case "Ovulation": return "border-yellow-100";
-  //     case "Luteal": return "border-blue-100";
+  //     case CYCLE_PHASES.MENSTRUAL: return "border-red-100";
+  //     case CYCLE_PHASES.FOLLICULAR: return "border-green-100";
+  //     case CYCLE_PHASES.OVULATORY: return "border-yellow-100";
+  //     case CYCLE_PHASES.LUTEAL: return "border-blue-100";
   //     default: return "border-purple-100";
   //   }
   // };
@@ -276,34 +303,23 @@ const HomePage: React.FC = () => {
     <div className="flex min-h-screen flex-col justify-between">
       {/* Mood Popup */}
       {showMoodPopup && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 backdrop-blur-sm">
-          <div className="animate-in fade-in zoom-in relative w-full max-w-md rounded-xl bg-white p-6 shadow-lg">
-            <button
-              onClick={() => setShowMoodPopup(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
-            >
-              <svg
-                width="25"
-                height="25"
-                viewBox="0 0 25 25"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 backdrop-blur-md">
+          <div className="animate-in fade-in zoom-in relative flex w-full max-w-md flex-col gap-5 rounded-xl bg-white p-6 shadow-lg">
+            <div className="flex justify-between">
+              <h3 className="text-center text-2xl font-semibold text-purple-800">
+                How are you feeling today?
+              </h3>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowMoodPopup(false)}
+                className="text-gray-400 hover:text-gray-600"
               >
-                <path
-                  d="M18 6L6 18M6 6L18 18"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
+                <X className="h-6 w-6" />
+              </Button>
+            </div>
 
-            <h3 className="mb-8 text-center text-2xl font-semibold text-purple-800">
-              How are you feeling today?
-            </h3>
-
-            <div className="mb-8 grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <button
                 onClick={() => handleMoodSelect("energetic")}
                 className="flex flex-col items-center gap-3 rounded-xl bg-purple-100 p-6 transition-colors hover:bg-purple-200"
@@ -345,6 +361,44 @@ const HomePage: React.FC = () => {
         </div>
       )}
 
+      {showKnowMorePopup && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 backdrop-blur-md"
+          onClick={() => setShowKnowMorePopup(false)}
+        >
+          <div
+            className="animate-in fade-in zoom-in relative z-10 flex w-full max-w-md flex-col gap-5 rounded-xl bg-white p-6 shadow-lg"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between">
+              <h2 className="text-center text-2xl font-semibold text-purple-800">
+                Know more about your cycle
+              </h2>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowKnowMorePopup(false)}
+                className="self-start text-gray-400 hover:text-gray-600"
+              >
+                <X className="size-6" />
+              </Button>
+            </div>
+            <div className="border-brand-dark rounded-lg border-2 p-4 shadow-lg">
+              <h3 className="text-xl font-semibold text-purple-400">
+                Phase Superpowers
+              </h3>
+              <p className="text-sm text-gray-600">{cycleInfo?.superpower}</p>
+            </div>
+            <div className="border-brand-dark rounded-lg border-2 p-4 shadow-lg">
+              <h3 className="text-xl font-semibold text-purple-400">
+                Fun Science Fact
+              </h3>
+              <p className="text-sm text-gray-600">{cycleInfo?.fact}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main content */}
       <main className="container mx-auto px-4 pt-24 pb-10 sm:pb-8">
         {/* User greeting */}
@@ -355,7 +409,7 @@ const HomePage: React.FC = () => {
             </div>
             <div>
               <h2 className="text-xl font-semibold text-white">
-                {/* Welcome, {user.name || user.username}! */}
+                Welcome, {user?.fullName}!
               </h2>
               <p className="text-white/80">
                 Your personalized wellness journey is here.
@@ -374,6 +428,7 @@ const HomePage: React.FC = () => {
             <Button
               variant="ghost"
               className="h-auto px-2 py-1 text-sm text-purple-600 hover:bg-purple-50"
+              onClick={() => navigate("/update")}
             >
               Update <ArrowRight className="ml-1 h-3 w-3" />
             </Button>
@@ -391,22 +446,8 @@ const HomePage: React.FC = () => {
                         {!!userInfo && userInfo.cyclePhase}
                       </span>
                     </div>
-                    <div className="mt-1 max-w-xs text-sm text-gray-600">
-                      {!!userInfo &&
-                        userInfo.cyclePhase === "menstruation" &&
-                        "Your body is shedding uterine lining. Focus on rest and gentle movement."}
-                      {!!userInfo &&
-                        userInfo.cyclePhase === "follicular" &&
-                        "Your body is preparing for ovulation. Energy levels start to increase."}
-                      {!!userInfo &&
-                        userInfo.cyclePhase === "ovulation" &&
-                        "Your body is releasing an egg. Peak energy and confidence levels."}
-                      {!!userInfo &&
-                        userInfo.cyclePhase === "luteal" &&
-                        "Your body is preparing for possible pregnancy. Energy may start to decrease."}
-                      {!!userInfo &&
-                        userInfo.cyclePhase === "unknown" &&
-                        "Complete your profile to get personalized cycle insights."}
+                    <div className="mt-1 max-w-xl text-sm text-gray-600">
+                      {!!cycleInfo && cycleInfo.description}
                     </div>
                   </div>
                   <div className="order-first mb-4 flex flex-col items-center sm:order-none sm:mb-0">
@@ -421,29 +462,9 @@ const HomePage: React.FC = () => {
                       </span>
                     </div>
                   </div>
-                  {/* <div className="mb-4 sm:mb-0">
-                    <span className="text-sm text-gray-500">Next phase in</span>
-                    <div className="flex items-center">
-                      <span className="text-lg font-medium text-gray-800">
-                        {!!userInfo && userInfo.nextPhaseIn} days
-                      </span>
-                    </div>
-                  </div> */}
                 </div>
 
                 <div>
-                  {/* <div className="mb-1 flex justify-between text-xs text-gray-500">
-                    <span>Day 1</span>
-                    <span>Day 28</span>
-                  </div>
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-gray-50">
-                    <div
-                      className="h-full bg-gradient-to-r from-purple-200 to-purple-400"
-                      style={{
-                        width: `${!!userInfo && userInfo.cyclePercentage}%`,
-                      }}
-                    ></div>
-                  </div> */}
                   {/* // Hormone Levels Section */}
                   <div className="mt-2">
                     <h4 className="mb-3 text-sm font-medium text-gray-700">
@@ -456,16 +477,19 @@ const HomePage: React.FC = () => {
                           <span className="text-sm font-medium text-pink-500">
                             Estrogen
                           </span>
-                          <span className="text-xs text-pink-400">rising</span>
+                          {/* <span className="text-xs text-pink-400">rising</span> */}
                         </div>
                         <div className="h-2 w-full overflow-hidden rounded-full bg-pink-50">
                           <div
                             className="h-full rounded-full bg-gradient-to-r from-pink-100 to-pink-300"
-                            style={{ width: "60%" }}
+                            style={{
+                              width: cycleInfo?.estrogen.percentage + "%",
+                            }}
                           ></div>
                         </div>
                         <p className="mt-1 text-xs text-gray-500">
-                          Peaks during ovulation, boosting energy
+                          {/* Peaks during ovulation, boosting energy */}
+                          {cycleInfo?.estrogen.notes}
                         </p>
                       </div>
                       {/* // Progesterone */}
@@ -474,16 +498,19 @@ const HomePage: React.FC = () => {
                           <span className="text-sm font-medium text-blue-400">
                             Progesterone
                           </span>
-                          <span className="text-xs text-gray-500">stable</span>
+                          {/* <span className="text-xs text-gray-500">stable</span> */}
                         </div>
                         <div className="h-2 w-full overflow-hidden rounded-full bg-blue-50">
                           <div
                             className="h-full rounded-full bg-gradient-to-r from-blue-100 to-blue-300"
-                            style={{ width: "40%" }}
+                            style={{
+                              width: cycleInfo?.progesterone.percentage + "%",
+                            }}
                           ></div>
                         </div>
                         <p className="mt-1 text-xs text-gray-500">
-                          Low during ovulation, rises in luteal phase
+                          {/* Low during ovulation, rises in luteal phase */}
+                          {cycleInfo?.progesterone.notes}
                         </p>
                       </div>
                       {/* // Testosterone */}
@@ -492,21 +519,27 @@ const HomePage: React.FC = () => {
                           <span className="text-sm font-medium text-amber-500">
                             Testosterone
                           </span>
-                          <span className="text-xs text-amber-400">rising</span>
+                          {/* <span className="text-xs text-amber-400">rising</span> */}
                         </div>
                         <div className="h-2 w-full overflow-hidden rounded-full bg-amber-50">
                           <div
                             className="h-full rounded-full bg-gradient-to-r from-amber-100 to-amber-300"
-                            style={{ width: "70%" }}
+                            style={{
+                              width: cycleInfo?.testosterone.percentage + "%",
+                            }}
                           ></div>
                         </div>
                         <p className="mt-1 text-xs text-gray-500">
-                          Increases during ovulation, boosts libido
+                          {/* Increases during ovulation, boosts libido */}
+                          {cycleInfo?.testosterone.notes}
                         </p>
                       </div>
                     </div>
                   </div>
-                  <Button className="gradient-primary mt-6 w-full hover:opacity-90">
+                  <Button
+                    className="gradient-primary mt-6 w-full hover:opacity-90"
+                    onClick={() => setShowKnowMorePopup(true)}
+                  >
                     Know more about your cycle
                   </Button>
                 </div>
@@ -541,38 +574,43 @@ const HomePage: React.FC = () => {
             <div className="space-y-3">
               {/* Debug log: {console.log("Debug cyclePhase value:", cyclePhase)} */}
               <div className="mb-3 text-sm text-gray-600">
-                {!!userInfo && userInfo.cyclePhase === "follicular" && (
-                  <p>
-                    The Follicular phase is a great time to build muscle as your
-                    energy increases. Your body naturally has more stamina now.
-                  </p>
-                )}
-                {!!userInfo && userInfo.cyclePhase === "ovulation" && (
-                  <p>
-                    During Ovulation, your energy is at its peak, making it
-                    ideal for high-intensity workouts and setting new personal
-                    records.
-                  </p>
-                )}
-                {!!userInfo && userInfo.cyclePhase === "luteal" && (
+                {!!userInfo &&
+                  userInfo.cyclePhase === CYCLE_PHASES.FOLLICULAR && (
+                    <p>
+                      The Follicular phase is a great time to build muscle as
+                      your energy increases. Your body naturally has more
+                      stamina now.
+                    </p>
+                  )}
+                {!!userInfo &&
+                  userInfo.cyclePhase === CYCLE_PHASES.OVULATORY && (
+                    <p>
+                      During Ovulation, your energy is at its peak, making it
+                      ideal for high-intensity workouts and setting new personal
+                      records.
+                    </p>
+                  )}
+                {!!userInfo && userInfo.cyclePhase === CYCLE_PHASES.LUTEAL && (
                   <p>
                     In the Luteal phase, your body is winding down. Focus on
                     moderate activity and active recovery to support this
                     transition.
                   </p>
                 )}
-                {!!userInfo && userInfo.cyclePhase === "menstruation" && (
-                  <p>
-                    During Menstruation, your energy is lower. Gentle movement
-                    supports your body's natural recovery process.
-                  </p>
-                )}
-                {!!userInfo && userInfo.cyclePhase === "unknown" && (
-                  <p>
-                    Matching your workouts to your cycle phase can optimize
-                    results and make exercise feel more natural and enjoyable.
-                  </p>
-                )}
+                {!!userInfo &&
+                  userInfo.cyclePhase === CYCLE_PHASES.MENSTRUAL && (
+                    <p>
+                      During Menstruation, your energy is lower. Gentle movement
+                      supports your body's natural recovery process.
+                    </p>
+                  )}
+                {!!userInfo &&
+                  userInfo.cyclePhase === CYCLE_PHASES.AWAITING_CYCLE_START && (
+                    <p>
+                      Matching your workouts to your cycle phase can optimize
+                      results and make exercise feel more natural and enjoyable.
+                    </p>
+                  )}
               </div>
               <p className="text-sm font-medium text-gray-600">
                 Based on your{" "}
@@ -612,39 +650,43 @@ const HomePage: React.FC = () => {
             <div className="space-y-3">
               {/* Debug log: {console.log("Debug cyclePhase value (nutrition):", cyclePhase)} */}
               <div className="mb-3 text-sm text-gray-600">
-                {!!userInfo && userInfo.cyclePhase === "follicular" && (
-                  <p>
-                    During your follicular phase, focus on foods that support
-                    rising estrogen levels. Your metabolism is increasing and
-                    your body needs more nutrients.
-                  </p>
-                )}
-                {!!userInfo && userInfo.cyclePhase === "ovulation" && (
-                  <p>
-                    During ovulation, your body benefits from antioxidant-rich
-                    foods that support hormone balance and cellular health.
-                  </p>
-                )}
-                {!!userInfo && userInfo.cyclePhase === "luteal" && (
+                {!!userInfo &&
+                  userInfo.cyclePhase === CYCLE_PHASES.FOLLICULAR && (
+                    <p>
+                      During your follicular phase, focus on foods that support
+                      rising estrogen levels. Your metabolism is increasing and
+                      your body needs more nutrients.
+                    </p>
+                  )}
+                {!!userInfo &&
+                  userInfo.cyclePhase === CYCLE_PHASES.OVULATORY && (
+                    <p>
+                      During ovulation, your body benefits from antioxidant-rich
+                      foods that support hormone balance and cellular health.
+                    </p>
+                  )}
+                {!!userInfo && userInfo.cyclePhase === CYCLE_PHASES.LUTEAL && (
                   <p>
                     In the luteal phase, your body needs foods that help balance
                     mood and reduce bloating as progesterone rises.
                   </p>
                 )}
-                {!!userInfo && userInfo.cyclePhase === "menstruation" && (
-                  <p>
-                    During menstruation, your body needs extra iron and
-                    anti-inflammatory foods to replenish what's lost and reduce
-                    discomfort.
-                  </p>
-                )}
-                {!!userInfo && userInfo.cyclePhase === "unknown" && (
-                  <p>
-                    Eating according to your cycle phase can help manage
-                    symptoms and provide your body with exactly what it needs
-                    when it needs it.
-                  </p>
-                )}
+                {!!userInfo &&
+                  userInfo.cyclePhase === CYCLE_PHASES.MENSTRUAL && (
+                    <p>
+                      During menstruation, your body needs extra iron and
+                      anti-inflammatory foods to replenish what's lost and
+                      reduce discomfort.
+                    </p>
+                  )}
+                {!!userInfo &&
+                  userInfo.cyclePhase === CYCLE_PHASES.AWAITING_CYCLE_START && (
+                    <p>
+                      Eating according to your cycle phase can help manage
+                      symptoms and provide your body with exactly what it needs
+                      when it needs it.
+                    </p>
+                  )}
               </div>
               <p className="text-sm font-medium text-gray-600">
                 Foods to focus on during your{" "}
