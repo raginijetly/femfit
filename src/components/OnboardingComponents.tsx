@@ -2,7 +2,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useEffect, useRef, useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
-import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -14,12 +13,12 @@ const OnboardingQuestionCard: React.FC<{
   placeholder?: string;
   label?: string;
   options?: { value: string; title: string; text?: string }[];
+  answer?: string | string[] | number;
   setNumberInput?: (value: number | undefined) => void;
-  setDateInput?: (value: Date | "idk" | undefined) => void;
+  setDateInput?: (value: Date | undefined) => void;
   setSingleSelect?: (value: string) => void;
   setMultiSelect?: (value: string[]) => void;
   setBmiInput?: (value: number) => void;
-  children?: React.ReactNode;
 }> = (props) => {
   switch (props.type) {
     case "numberInput":
@@ -29,6 +28,7 @@ const OnboardingQuestionCard: React.FC<{
             questionKey={props.questionKey ?? "number-input"}
             placeholder={props?.placeholder}
             label={props?.label}
+            answer={props?.answer ? Number(props.answer) : undefined}
             setNumberInput={props?.setNumberInput}
           />
         </OnboardingQuestionWraper>
@@ -39,6 +39,7 @@ const OnboardingQuestionCard: React.FC<{
           <DateCard
             setDateInput={props?.setDateInput}
             placeholder={props?.placeholder}
+            answer={props?.answer ? (props.answer as string) : undefined}
           />
         </OnboardingQuestionWraper>
       );
@@ -48,6 +49,7 @@ const OnboardingQuestionCard: React.FC<{
           <SingleSelectCard
             options={props?.options ?? [{ value: "", title: "" }]}
             setSingleSelect={props?.setSingleSelect}
+            answer={props?.answer ? String(props.answer) : undefined}
           />
         </OnboardingQuestionWraper>
       );
@@ -58,6 +60,13 @@ const OnboardingQuestionCard: React.FC<{
             options={props?.options ?? [{ value: "", title: "" }]}
             placeholder={props?.placeholder}
             setMultiSelect={props?.setMultiSelect}
+            answer={
+              Array.isArray(props?.answer)
+                ? props.answer
+                : props?.answer
+                  ? [String(props.answer)]
+                  : []
+            }
           />
         </OnboardingQuestionWraper>
       );
@@ -95,12 +104,15 @@ const OnboardingQuestionWraper: React.FC<{
 };
 
 const NumberInputCard: React.FC<{
+  answer?: number;
   questionKey: string;
   placeholder?: string;
   label?: string;
   setNumberInput?: (value: number | undefined) => void;
 }> = (props) => {
-  const [num, setNum] = useState<number | undefined>(undefined);
+  const [num, setNum] = useState<number | undefined>(
+    props?.answer ? props.answer : undefined,
+  );
   const inputRef = useRef<HTMLInputElement>(null);
   // Focus the input when the component mounts
   useEffect(() => {
@@ -140,94 +152,60 @@ const NumberInputCard: React.FC<{
 
 const DateCard: React.FC<{
   placeholder?: string;
+  answer?: string;
   setDateInput?: (value: Date | undefined) => void;
 }> = (props) => {
-  const [idk, setIdk] = useState<boolean>(false);
-  const [dateVal, setDateVal] = useState<Date | undefined>(undefined);
+  const [dateVal, setDateVal] = useState<Date | undefined>(
+    props?.answer ? new Date(props.answer) : undefined,
+  );
   return (
     <>
-      {!idk ? (
-        <div className="flex items-center justify-center">
-          <div className="w-full max-w-md rounded-lg bg-white p-4">
-            {/* <div className="mb-2 flex items-center">
-              <CalendarIcon className="mr-2 h-5 w-5 text-purple-700" />
-              <span className="text-gray-700">First day of last period</span>
-            </div> */}
-
-            <div className="flex w-full justify-center">
-              <Calendar
-                mode="single"
-                selected={dateVal}
-                onSelect={(date) => {
-                  setDateVal(date);
-                  if (props?.setDateInput) props.setDateInput(date);
-                }}
-                className="w-full"
-                styles={{
-                  root: { width: "100%", color: "#6b21a8" },
-                  month: { width: "100%" },
-                  table: { width: "100%" },
-                }}
-                disabled={(date) => date > new Date()}
-              />
-            </div>
-
-            {dateVal && (
-              <p className="py-2 text-center text-lg font-semibold text-purple-700">
-                Selected: {format(dateVal, "MMMM d, yyyy")}
-              </p>
-            )}
-
-            {props?.placeholder && (
-              <p className="rounded-lg border-2 border-purple-700/50 p-2 text-center text-sm text-purple-700">
-                {props.placeholder}
-              </p>
-            )}
-
-            {/* <Button
-              variant="ghost"
-              className="h-8 min-h-8 w-fit rounded-lg border-2 border-purple-700 px-6 text-xs text-purple-700"
-              onClick={() => {
-                setIdk(true);
-                setDateVal("idk");
-                if (props?.setDateInput) props.setDateInput("idk");
+      <div className="flex items-center justify-center">
+        <div className="w-full max-w-md rounded-lg bg-white p-4">
+          <div className="flex w-full justify-center">
+            <Calendar
+              mode="single"
+              selected={dateVal}
+              onSelect={(date) => {
+                setDateVal(date);
+                if (props?.setDateInput) props.setDateInput(date);
               }}
-            >
-              I don't know my last period date
-            </Button> */}
+              className="w-full"
+              styles={{
+                root: { width: "100%", color: "#6b21a8" },
+                month: { width: "100%" },
+                table: { width: "100%" },
+              }}
+              disabled={(date) => date > new Date()}
+            />
           </div>
-        </div>
-      ) : (
-        <div className="flex flex-1 flex-col items-center justify-center">
-          <div className="w-full max-w-md rounded-lg bg-white p-6 text-center">
-            <p className="mb-4 text-gray-700">
-              You can log the first day of your last period later or log the
-              beginning of your new one later.
+
+          {dateVal && (
+            <p className="py-2 text-center text-lg font-semibold text-purple-700">
+              Selected: {format(dateVal, "MMMM d, yyyy")}
             </p>
-            <Button
-              variant="outline"
-              className="w-full border-purple-700 text-purple-700 shadow-md shadow-purple-700/50 hover:bg-purple-50/50"
-              onClick={() => {
-                setIdk(false);
-                setDateVal(undefined);
-                if (props?.setDateInput) props.setDateInput(undefined);
-              }}
-            >
-              Back to calendar
-            </Button>
-          </div>
+          )}
+
+          {props?.placeholder && (
+            <p className="rounded-lg border-2 border-purple-700/50 p-2 text-center text-sm text-purple-700">
+              {props.placeholder}
+            </p>
+          )}
         </div>
-      )}
+      </div>
     </>
   );
 };
 
 const SingleSelectCard: React.FC<{
   options: { value: string; title: string; text?: string }[];
+  answer?: string;
   setSingleSelect?: (value: string) => void;
 }> = (props) => {
   const [selectedOption, setSelectedOption] = useState<number | undefined>(
-    undefined,
+    props?.answer
+      ? props.options.findIndex((item) => item.value === props.answer)
+      : undefined,
   );
   return props.options.map((item, index) => {
     return (
@@ -268,9 +246,12 @@ const SingleSelectCard: React.FC<{
 const MultiSelectCard: React.FC<{
   options: { value: string; title: string; text?: string }[];
   placeholder?: string;
+  answer?: string[];
   setMultiSelect?: (value: string[]) => void;
 }> = (props) => {
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>(
+    props?.answer || [],
+  );
   const toggleSelectedOption = (option: string) => {
     setSelectedOptions((prev) => {
       const selected = prev.includes(option)

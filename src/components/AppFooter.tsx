@@ -14,7 +14,7 @@ const AppFooter: React.FC = () => {
         <Button
           variant="link"
           className={`${
-            location.pathname === "/"
+            location.pathname === "/" || location.pathname === "/update"
               ? "font-medium text-purple-600"
               : "text-gray-500"
           } flex h-auto w-1/5 flex-col items-center p-1 hover:bg-transparent`}
@@ -23,7 +23,7 @@ const AppFooter: React.FC = () => {
           <div className="flex flex-col items-center justify-center">
             <Home className="h-6 w-6" />
             <span
-              className={`mt-1 text-xs ${location.pathname === "/" && "font-bold"}`}
+              className={`mt-1 text-xs ${(location.pathname === "/" || location.pathname === "/update") && "font-bold"}`}
             >
               Home
             </span>
