@@ -87,20 +87,22 @@ const HomePage: React.FC = () => {
 
   // Show the mood popup after 5 seconds on the home page
   useEffect(() => {
+    // Only show mood popup if user is logged in and has completed onboarding
+    if (!user || !user.completedOnboarding) return;
+    // If the user has already logged their mood today, do not show the popup
     if (
-      user &&
-      user.completedOnboarding &&
+      user.dailyMood.length > 0 &&
       differenceInDays(
         new Date(),
         new Date(user.dailyMood[user.dailyMood.length - 1]?.date),
-      )
-    ) {
-      const timer = setTimeout(() => {
-        setShowMoodPopup(true);
-      }, 5000); // 5 seconds
+      ) === 0
+    )
+      return;
 
-      return () => clearTimeout(timer);
-    }
+    const timer = setTimeout(() => {
+      setShowMoodPopup(true);
+    }, 5000); // 5 seconds
+    return () => clearTimeout(timer);
   }, [user]);
 
   // Close the Know More popup when the Escape key is pressed
