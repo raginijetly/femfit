@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import Numbering from "@/components/ui/numbering";
+import Numbering from "@/components/ui/Numbering";
 
 const WorkoutPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -254,15 +254,15 @@ const WorkoutPage: React.FC = () => {
             <div className="rounded-lg bg-green-100 p-4">
               <ul className="space-y-2 text-sm">
                 <li className="flex items-center gap-2">
-                  <Numbering number={1} bgColor="green-500" />
+                  <Numbering number={1} bgColor="bg-green-500" />
                   Dynamic Arm Circles (10x Fwd/Bwd) 🔄
                 </li>
                 <li className="flex items-center gap-2">
-                  <Numbering number={2} bgColor="green-500" />
+                  <Numbering number={2} bgColor="bg-green-500" />
                   Cat-Cow Stretch (8x) 🐱
                 </li>
                 <li className="flex items-center gap-2">
-                  <Numbering number={3} bgColor="green-500" />
+                  <Numbering number={3} bgColor="bg-green-500" />
                   Leg Swings (8x each leg) 🦵
                 </li>
               </ul>
@@ -345,15 +345,15 @@ const WorkoutPage: React.FC = () => {
             <div className="rounded-lg bg-blue-50 p-4">
               <ul className="space-y-2 text-sm">
                 <li className="flex items-center gap-2">
-                  <Numbering number={1} bgColor="blue-500" />
+                  <Numbering number={1} bgColor="bg-blue-500" />
                   Hamstring Stretch (30 sec each leg) 🤸‍♀️
                 </li>
                 <li className="flex items-center gap-2">
-                  <Numbering number={2} bgColor="blue-500" />
+                  <Numbering number={2} bgColor="bg-blue-500" />
                   Child's Pose (60 sec) 🧘‍♀️
                 </li>
                 <li className="flex items-center gap-2">
-                  <Numbering number={3} bgColor="blue-500" />
+                  <Numbering number={3} bgColor="bg-blue-500" />
                   Spinal Twist (30 sec each side) 🌀
                 </li>
               </ul>
