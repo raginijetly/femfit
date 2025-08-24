@@ -419,7 +419,7 @@ export default function AuthPage() {
           </div>
           <GoogleLoginButton
             onToken={(idToken) => {
-              fetch(`${BACKEND_API_URL}/api/auth/sign-in-with-google`, {
+              fetch(`${BACKEND_API_URL}/auth/sign-in-with-google`, {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -451,4 +451,5 @@ export default function AuthPage() {
     </div>
   );
 }
+
 
