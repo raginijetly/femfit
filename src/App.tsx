@@ -3,6 +3,7 @@ import AuthPage from "@/pages/auth-page-tabs";
 import HomePage from "@/pages/home-page";
 import OnboardingPage from "@/pages/onboarding-page";
 import NotFound from "@/pages/not-found";
+import ResetPasswordPage from "@/pages/reset-password-page";
 
 // Placeholder Pages
 import SymptomsPage from "@/pages/symptoms-page";
@@ -28,7 +29,9 @@ function AppContent() {
 
   // Determine visibility of header and footer
   const headerFooterVisible =
-    location.pathname !== "/auth" && location.pathname !== "/onboarding";
+    location.pathname !== "/auth" &&
+    location.pathname !== "/onboarding" &&
+    location.pathname !== "/reset-password";
 
   // useEffect(() => {
   //   const handleResize = () => setViewportWidth(window.innerWidth);
@@ -42,6 +45,7 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/auth" element={<AuthPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/onboarding" element={<OnboardingPage />} />
         <Route path="/update" element={<UpdatePage />} />
         <Route path="/symptoms" element={<SymptomsPage />} />
