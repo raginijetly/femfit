@@ -6,6 +6,7 @@ export async function fetchData(
   type: "get" | "post" | "put",
   url: string,
   data?: any,
+  headers?: Record<string, string>,
 ) {
   try {
     const response = await axios({
@@ -15,6 +16,7 @@ export async function fetchData(
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}` || "",
+        ...(headers ?? {}),
       },
       withCredentials: true,
     });
@@ -114,3 +116,4 @@ export function getOthersAnswer(
 
   return answerArray.filter((ans) => !validValues.has(ans))[0] || "";
 }
+

@@ -13,7 +13,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import GoogleLoginButton from "@/components/GoogleLoginButton";
 import { useNavigate } from "react-router-dom";
 import { fetchData } from "@/utils/commonFunction";
-import { BACKEND_API_URL, UI_DELAY } from "@/utils/constants";
+import { BACKEND_API_URL, FRONTEND_URL, UI_DELAY } from "@/utils/constants";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+  CardAction,
+  CardContent,
+} from "@/components/ui/card";
+import { X } from "lucide-react";
 
 interface FieldErrorType {
   field: string;
@@ -32,7 +41,9 @@ export default function AuthPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const [error, setError] = useState<FieldErrorType[]>([]);
-
+  const [popupOpen, setPopupOpen] = useState<boolean>(false);
+  const [popupMessage, setPopupMessage] = useState<string>("");
+  
   const errorMap = useMemo(() => {
     return error.reduce(
       (acc, err) => {
@@ -119,6 +130,40 @@ export default function AuthPage() {
       setError([error]);
       clearAllFields();
       console.log(error);
+      setLoading(false);
+    }
+  };
+
+  // Handle forgot password (send reset email)
+  const onForgotPassword = async () => {
+    // simple validation
+    if (!email || email.trim() === "") {
+      setError([{ field: "email", message: "Please enter your email" }]);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetchData(
+        "post",
+        `${BACKEND_API_URL}/auth/forget-password`,
+        { email },
+        { "x-client-url": FRONTEND_URL },
+      );
+
+      // fetchData returns response.data — backend uses status inside data
+      if (response?.status === 200 || response?.success === true) {
+        setPopupMessage("If this email exists, a reset link has been sent.");
+        setPopupOpen(true);
+      } else {
+        setPopupMessage(response?.message ?? "Unable to send reset email");
+        setPopupOpen(true);
+      }
+    } catch (err: any) {
+      setPopupMessage(err?.message ?? "Error sending reset email");
+      setPopupOpen(true);
+      console.error("Forgot password error:", err);
+    } finally {
       setLoading(false);
     }
   };
@@ -235,17 +280,27 @@ export default function AuthPage() {
                   )}
                 </div>
 
-                <Button
-                  // type="submit"
-                  className="mt-3 h-12 w-full rounded-xl border-0 bg-white font-medium text-purple-600 transition-colors hover:bg-gray-50"
-                  disabled={loading}
-                  onClick={onLogin}
-                >
-                  {loading && (
-                    <Loader2 className="text-brand-dark mr-2 size-5 animate-spin" />
-                  )}
-                  Log In
-                </Button>
+                <div className="flex w-full flex-col gap-2">
+                  <Button
+                    variant="ghost"
+                    className="w-full text-white/90 hover:text-white/100"
+                    onClick={onForgotPassword}
+                    disabled={loading}
+                  >
+                    Forgot password?
+                  </Button>
+                  <Button
+                    // type="submit"
+                    className="h-12 w-full rounded-xl border-0 bg-white font-medium text-purple-600 transition-colors hover:bg-gray-50"
+                    disabled={loading}
+                    onClick={onLogin}
+                  >
+                    {loading && (
+                      <Loader2 className="text-brand-dark mr-2 size-5 animate-spin" />
+                    )}
+                    Log In
+                  </Button>
+                </div>
               </div>
             </TabsContent>
 
@@ -446,10 +501,61 @@ export default function AuthPage() {
                 });
             }}
           />
+           {/* Popup notification card for forgot-password */}
+          {popupOpen && (
+            <div
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
+              onClick={() => setPopupOpen(false)}
+            >
+              <Card
+                className="max-w-lg rounded-xl border-0 bg-white shadow-2xl"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <CardHeader>
+                  <CardTitle className="text-brand-dark text-xl">
+                    Notification
+                  </CardTitle>
+                  <CardAction>
+                    <button
+                      aria-label="Close"
+                      className="text-muted-foreground rounded-full p-1 hover:bg-gray-100"
+                      onClick={() => setPopupOpen(false)}
+                    >
+                      <X className="text-brand-dark h-4 w-4" />
+                    </button>
+                  </CardAction>
+                </CardHeader>
+
+                <CardContent>
+                  <div className="-my-5 space-y-3 rounded-md p-2">
+                    <h3 className="text-lg font-semibold text-purple-600">
+                      {popupMessage}
+                    </h3>
+                    <p className="text-center text-xs text-black">
+                      If you don't receive the email shortly, please check your
+                      spam folder or try again.
+                    </p>
+                  </div>
+                </CardContent>
+
+                <CardFooter>
+                  <div className="flex w-full justify-end">
+                    <Button
+                      className="h-10 rounded-md bg-purple-600 text-white"
+                      onClick={() => setPopupOpen(false)}
+                    >
+                      OK
+                    </Button>
+                  </div>
+                </CardFooter>
+              </Card>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 }
+
 
 
