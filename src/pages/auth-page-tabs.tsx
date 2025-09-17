@@ -18,7 +18,6 @@ import {
   Card,
   CardHeader,
   CardTitle,
-  CardFooter,
   CardAction,
   CardContent,
 } from "@/components/ui/card";
@@ -43,7 +42,8 @@ export default function AuthPage() {
   const [error, setError] = useState<FieldErrorType[]>([]);
   const [popupOpen, setPopupOpen] = useState<boolean>(false);
   const [popupMessage, setPopupMessage] = useState<string>("");
-  
+  const [loginWithEmail, setLoginWithEmail] = useState<boolean>(false);
+
   const errorMap = useMemo(() => {
     return error.reduce(
       (acc, err) => {
@@ -187,291 +187,6 @@ export default function AuthPage() {
               <p>Built by Women For Women</p>
             </div>
           </div>
-
-          <Tabs
-            defaultValue="login"
-            value={activeTab}
-            onValueChange={setActiveTab}
-            className="w-full"
-          >
-            <TabsList className="mb-5 flex w-full justify-center gap-4 overflow-visible border-0 bg-transparent p-0 px-2">
-              <TabsTrigger
-                value="login"
-                className={`hover: rounded-full border-2 border-white/30 p-5 transition-all hover:bg-white/10 ${
-                  activeTab === "login"
-                    ? "text-brand-dark bg-white font-bold"
-                    : "bg-transparent font-normal"
-                }`}
-              >
-                Login
-              </TabsTrigger>
-              <TabsTrigger
-                value="signup"
-                className={`hover: rounded-full border-2 border-white/30 p-5 transition-all hover:bg-white/10 ${
-                  activeTab === "signup"
-                    ? "text-brand-dark bg-white font-bold"
-                    : "bg-transparent font-normal"
-                }`}
-              >
-                Sign Up
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="login">
-              <div className="flex flex-col gap-5">
-                <div className="">
-                  <Label
-                    htmlFor="signup-email"
-                    className="mb-1 h-5 min-h-5 font-normal"
-                  >
-                    Email
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="signup-email"
-                      type="email"
-                      placeholder="Enter your email"
-                      className={`text-brand-dark h-12 w-full rounded-xl bg-white pl-10 ${
-                        errorMap.email && "border-red-600"
-                      }`}
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      autoComplete="email"
-                    />
-                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                      <Mail className="text-brand-dark size-5" />
-                    </div>
-                  </div>
-                  {errorMap.email && (
-                    <p className="text-xs text-red-600">{errorMap.email}</p>
-                  )}
-                </div>
-
-                <div className="">
-                  <Label
-                    htmlFor="password"
-                    className="mb-1 h-5 min-h-5 font-normal"
-                  >
-                    Password
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="Enter your password"
-                      className={`text-brand-dark h-12 w-full rounded-xl border-2 bg-white pl-10 ${
-                        errorMap.password && "border-red-600"
-                      }`}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          e.preventDefault();
-                          onLogin();
-                        }
-                      }}
-                    />
-                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                      <Lock className="text-brand-dark size-5" />
-                    </div>
-                  </div>
-                  {errorMap.password && (
-                    <p className="text-xs text-red-600">{errorMap.password}</p>
-                  )}
-                </div>
-
-                <div className="flex w-full flex-col gap-2">
-                  <Button
-                    variant="ghost"
-                    className="w-full text-white/90 hover:text-white/100"
-                    onClick={onForgotPassword}
-                    disabled={loading}
-                  >
-                    Forgot password?
-                  </Button>
-                  <Button
-                    // type="submit"
-                    className="h-12 w-full rounded-xl border-0 bg-white font-medium text-purple-600 transition-colors hover:bg-gray-50"
-                    disabled={loading}
-                    onClick={onLogin}
-                  >
-                    {loading && (
-                      <Loader2 className="text-brand-dark mr-2 size-5 animate-spin" />
-                    )}
-                    Log In
-                  </Button>
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="signup">
-              <div className="flex flex-col gap-5">
-                <div className="">
-                  <Label
-                    htmlFor="signup-name"
-                    className="mb-1 h-5 min-h-5 font-normal"
-                  >
-                    Full Name
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="signup-name"
-                      type="text"
-                      placeholder="Enter your full name"
-                      className={`text-brand-dark h-12 w-full rounded-xl bg-white pl-10 ${
-                        errorMap.fullName && "border-red-600"
-                      }`}
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                      autoComplete="name"
-                    />
-                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                      <UserIcon className="text-brand-dark size-5" />
-                    </div>
-                  </div>
-                  {errorMap.fullName && (
-                    <p className="text-xs text-red-600">{errorMap.fullName}</p>
-                  )}
-                </div>
-
-                {/* <div className="">
-                  <Label
-                    htmlFor="signup-username"
-                    className="mb-1 h-5 min-h-5 font-normal"
-                  >
-                    Username
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="signup-username"
-                      type="text"
-                      placeholder="Enter your username"
-                      className={`text-brand-dark h-12 w-full rounded-xl bg-white pl-10 ${
-                        errorMap.username && "border-red-600"
-                      }`}
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                    />
-                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                      <UserSquareIcon className="text-brand-dark size-5" />
-                    </div>
-                  </div>
-                  {errorMap.username && (
-                    <p className="text-xs text-red-600">{errorMap.username}</p>
-                  )}
-                </div> */}
-
-                <div className="">
-                  <Label
-                    htmlFor="signup-email"
-                    className="mb-1 h-5 min-h-5 font-normal"
-                  >
-                    Email
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="signup-email"
-                      type="email"
-                      placeholder="Enter your email"
-                      className={`text-brand-dark h-12 w-full rounded-xl bg-white pl-10 ${
-                        errorMap.email && "border-red-600"
-                      }`}
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      autoComplete="email"
-                    />
-                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                      <Mail className="text-brand-dark size-5" />
-                    </div>
-                  </div>
-                  {errorMap.email && (
-                    <p className="text-xs text-red-600">{errorMap.email}</p>
-                  )}
-                </div>
-
-                <div className="">
-                  <Label
-                    htmlFor="signup-password"
-                    className="mb-1 h-5 min-h-5 font-normal"
-                  >
-                    Password
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="signup-password"
-                      type="password"
-                      placeholder="Password (min. 6 characters)"
-                      className={`text-brand-dark h-12 w-full rounded-xl bg-white pl-10 ${
-                        errorMap.password && "border-red-600"
-                      }`}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                      <Lock className="text-brand-dark size-5" />
-                    </div>
-                  </div>
-                  {errorMap.password && (
-                    <p className="text-xs text-red-600">{errorMap.password}</p>
-                  )}
-                </div>
-
-                {password.length >= 6 && (
-                  <div className="">
-                    <Label
-                      htmlFor="signup-confirm-password"
-                      className="mb-1 h-5 min-h-5 font-normal"
-                    >
-                      Confirm Password
-                    </Label>
-                    <div className="relative">
-                      <Input
-                        id="signup-confirm-password"
-                        type="password"
-                        placeholder="Same Password Again"
-                        className={`text-brand-dark h-12 w-full rounded-xl bg-white pl-10 ${
-                          errorMap.confirmPassword && "border-red-600"
-                        }`}
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            e.preventDefault();
-                            onSignUp();
-                          }
-                        }}
-                      />
-                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                        <LockKeyhole className="text-brand-dark size-5" />
-                      </div>
-                    </div>
-                    {errorMap.confirmPassword && (
-                      <p className="text-xs text-red-600">
-                        {errorMap.confirmPassword}
-                      </p>
-                    )}
-                  </div>
-                )}
-
-                <Button
-                  // type="submit"
-                  className="mt-2 h-12 w-full rounded-xl border-0 bg-white font-medium text-purple-600 transition-colors hover:bg-gray-50"
-                  disabled={loading}
-                  onClick={onSignUp}
-                >
-                  {loading && (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin text-purple-600" />
-                  )}
-                  Sign Up
-                </Button>
-              </div>
-            </TabsContent>
-          </Tabs>
-          <div className="my-7 flex items-center gap-2">
-            <hr className="h-[1px] w-full overflow-hidden rounded-full bg-white/70" />
-            <p className="mx-5">OR</p>
-            <hr className="h-[1px] w-full overflow-hidden rounded-full bg-white/70" />
-          </div>
           <GoogleLoginButton
             onToken={(idToken) => {
               fetch(`${BACKEND_API_URL}/auth/sign-in-with-google`, {
@@ -501,7 +216,306 @@ export default function AuthPage() {
                 });
             }}
           />
-           {/* Popup notification card for forgot-password */}
+          <div className="my-7 flex items-center gap-2">
+            <hr className="h-[1px] w-full overflow-hidden rounded-full bg-white/70" />
+            <p className="mx-5">OR</p>
+            <hr className="h-[1px] w-full overflow-hidden rounded-full bg-white/70" />
+          </div>
+          {!!loginWithEmail ? (
+            <Tabs
+              defaultValue="login"
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="w-full"
+            >
+              <TabsList className="mb-5 flex w-full justify-center gap-4 overflow-visible border-0 bg-transparent p-0 px-2">
+                <TabsTrigger
+                  value="login"
+                  className={`hover: rounded-full border-2 border-white/30 p-5 transition-all hover:bg-white/10 ${
+                    activeTab === "login"
+                      ? "text-brand-dark bg-white font-bold"
+                      : "bg-transparent font-normal"
+                  }`}
+                >
+                  Login
+                </TabsTrigger>
+                <TabsTrigger
+                  value="signup"
+                  className={`hover: rounded-full border-2 border-white/30 p-5 transition-all hover:bg-white/10 ${
+                    activeTab === "signup"
+                      ? "text-brand-dark bg-white font-bold"
+                      : "bg-transparent font-normal"
+                  }`}
+                >
+                  Sign Up
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="login">
+                <div className="flex flex-col gap-5">
+                  <div className="">
+                    <Label
+                      htmlFor="signup-email"
+                      className="mb-1 h-5 min-h-5 font-normal"
+                    >
+                      Email
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        id="signup-email"
+                        type="email"
+                        placeholder="Enter your email"
+                        className={`text-brand-dark h-12 w-full rounded-xl bg-white pl-10 ${
+                          errorMap.email && "border-red-600"
+                        }`}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        autoComplete="email"
+                      />
+                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                        <Mail className="text-brand-dark size-5" />
+                      </div>
+                    </div>
+                    {errorMap.email && (
+                      <p className="text-xs text-red-600">{errorMap.email}</p>
+                    )}
+                  </div>
+
+                  <div className="">
+                    <Label
+                      htmlFor="password"
+                      className="mb-1 h-5 min-h-5 font-normal"
+                    >
+                      Password
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        type="password"
+                        placeholder="Enter your password"
+                        className={`text-brand-dark h-12 w-full rounded-xl border-2 bg-white pl-10 ${
+                          errorMap.password && "border-red-600"
+                        }`}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            onLogin();
+                          }
+                        }}
+                      />
+                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                        <Lock className="text-brand-dark size-5" />
+                      </div>
+                    </div>
+                    {errorMap.password && (
+                      <p className="text-xs text-red-600">
+                        {errorMap.password}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex w-full flex-col gap-2">
+                    <Button
+                      variant="ghost"
+                      className="w-full text-white/90 hover:text-white/100"
+                      onClick={onForgotPassword}
+                      disabled={loading}
+                    >
+                      Forgot password?
+                    </Button>
+                    <Button
+                      // type="submit"
+                      className="h-12 w-full rounded-xl border-0 bg-white font-medium text-purple-600 transition-colors hover:bg-gray-50"
+                      disabled={loading}
+                      onClick={onLogin}
+                    >
+                      {loading && (
+                        <Loader2 className="text-brand-dark mr-2 size-5 animate-spin" />
+                      )}
+                      Log In
+                    </Button>
+                  </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="signup">
+                <div className="flex flex-col gap-5">
+                  <div className="">
+                    <Label
+                      htmlFor="signup-name"
+                      className="mb-1 h-5 min-h-5 font-normal"
+                    >
+                      Full Name
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        id="signup-name"
+                        type="text"
+                        placeholder="Enter your full name"
+                        className={`text-brand-dark h-12 w-full rounded-xl bg-white pl-10 ${
+                          errorMap.fullName && "border-red-600"
+                        }`}
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        autoComplete="name"
+                      />
+                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                        <UserIcon className="text-brand-dark size-5" />
+                      </div>
+                    </div>
+                    {errorMap.fullName && (
+                      <p className="text-xs text-red-600">
+                        {errorMap.fullName}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* <div className="">
+                  <Label
+                    htmlFor="signup-username"
+                    className="mb-1 h-5 min-h-5 font-normal"
+                  >
+                    Username
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id="signup-username"
+                      type="text"
+                      placeholder="Enter your username"
+                      className={`text-brand-dark h-12 w-full rounded-xl bg-white pl-10 ${
+                        errorMap.username && "border-red-600"
+                      }`}
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                    />
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                      <UserSquareIcon className="text-brand-dark size-5" />
+                    </div>
+                  </div>
+                  {errorMap.username && (
+                    <p className="text-xs text-red-600">{errorMap.username}</p>
+                  )}
+                </div> */}
+
+                  <div className="">
+                    <Label
+                      htmlFor="signup-email"
+                      className="mb-1 h-5 min-h-5 font-normal"
+                    >
+                      Email
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        id="signup-email"
+                        type="email"
+                        placeholder="Enter your email"
+                        className={`text-brand-dark h-12 w-full rounded-xl bg-white pl-10 ${
+                          errorMap.email && "border-red-600"
+                        }`}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        autoComplete="email"
+                      />
+                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                        <Mail className="text-brand-dark size-5" />
+                      </div>
+                    </div>
+                    {errorMap.email && (
+                      <p className="text-xs text-red-600">{errorMap.email}</p>
+                    )}
+                  </div>
+
+                  <div className="">
+                    <Label
+                      htmlFor="signup-password"
+                      className="mb-1 h-5 min-h-5 font-normal"
+                    >
+                      Password
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        id="signup-password"
+                        type="password"
+                        placeholder="Password (min. 6 characters)"
+                        className={`text-brand-dark h-12 w-full rounded-xl bg-white pl-10 ${
+                          errorMap.password && "border-red-600"
+                        }`}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                        <Lock className="text-brand-dark size-5" />
+                      </div>
+                    </div>
+                    {errorMap.password && (
+                      <p className="text-xs text-red-600">
+                        {errorMap.password}
+                      </p>
+                    )}
+                  </div>
+
+                  {password.length >= 6 && (
+                    <div className="">
+                      <Label
+                        htmlFor="signup-confirm-password"
+                        className="mb-1 h-5 min-h-5 font-normal"
+                      >
+                        Confirm Password
+                      </Label>
+                      <div className="relative">
+                        <Input
+                          id="signup-confirm-password"
+                          type="password"
+                          placeholder="Same Password Again"
+                          className={`text-brand-dark h-12 w-full rounded-xl bg-white pl-10 ${
+                            errorMap.confirmPassword && "border-red-600"
+                          }`}
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              onSignUp();
+                            }
+                          }}
+                        />
+                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                          <LockKeyhole className="text-brand-dark size-5" />
+                        </div>
+                      </div>
+                      {errorMap.confirmPassword && (
+                        <p className="text-xs text-red-600">
+                          {errorMap.confirmPassword}
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  <Button
+                    // type="submit"
+                    className="mt-2 h-12 w-full rounded-xl border-0 bg-white font-medium text-purple-600 transition-colors hover:bg-gray-50"
+                    disabled={loading}
+                    onClick={onSignUp}
+                  >
+                    {loading && (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin text-purple-600" />
+                    )}
+                    Sign Up
+                  </Button>
+                </div>
+              </TabsContent>
+            </Tabs>
+          ) : (
+            <Button
+              className="h-12 w-full rounded-xl border-0 bg-white font-medium text-purple-600 transition-colors hover:bg-gray-50"
+              onClick={() => setLoginWithEmail(true)}
+            >
+              Continue with Email
+            </Button>
+          )}
+          {/* Popup notification card for forgot-password */}
           {popupOpen && (
             <div
               className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
@@ -527,7 +541,7 @@ export default function AuthPage() {
                 </CardHeader>
 
                 <CardContent>
-                  <div className="-my-5 space-y-3 rounded-md p-2">
+                  <div className="-mt-5 mb-5 space-y-3 rounded-md p-2">
                     <h3 className="text-lg font-semibold text-purple-600">
                       {popupMessage}
                     </h3>
@@ -536,18 +550,13 @@ export default function AuthPage() {
                       spam folder or try again.
                     </p>
                   </div>
+                  <Button
+                    className="h-10 w-full rounded-md bg-purple-600 text-white"
+                    onClick={() => setPopupOpen(false)}
+                  >
+                    OK
+                  </Button>
                 </CardContent>
-
-                <CardFooter>
-                  <div className="flex w-full justify-end">
-                    <Button
-                      className="h-10 rounded-md bg-purple-600 text-white"
-                      onClick={() => setPopupOpen(false)}
-                    >
-                      OK
-                    </Button>
-                  </div>
-                </CardFooter>
               </Card>
             </div>
           )}
@@ -556,6 +565,3 @@ export default function AuthPage() {
     </div>
   );
 }
-
-
-

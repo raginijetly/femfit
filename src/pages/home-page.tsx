@@ -151,20 +151,20 @@ const HomePage: React.FC = () => {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      const response = await fetchData("get", `${BACKEND_API_URL}/auth/logout`);
-      if (response.status === 200) {
-        console.log("Logout successful");
-        setUser(null);
-        navigate("/auth");
-      } else {
-        console.error("Logout failed:", response.data);
-      }
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
-  };
+  // const handleLogout = async () => {
+  //   try {
+  //     const response = await fetchData("get", `${BACKEND_API_URL}/auth/logout`);
+  //     if (response.status === 200) {
+  //       console.log("Logout successful");
+  //       setUser(null);
+  //       navigate("/auth");
+  //     } else {
+  //       console.error("Logout failed:", response.data);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during logout:", error);
+  //   }
+  // };
 
   // Get workout recommendations based on cycle phase
   const getWorkoutRecommendations = () => {
@@ -429,7 +429,7 @@ const HomePage: React.FC = () => {
             </h3>
             <Button
               variant="ghost"
-              className="h-auto px-2 py-1 text-sm text-purple-600 hover:bg-purple-50"
+              className="gradient-primary h-auto px-2 py-2 text-sm font-semibold shadow-lg"
               onClick={() => navigate("/update")}
             >
               Update <ArrowRight className="ml-1 h-3 w-3" />
@@ -539,7 +539,7 @@ const HomePage: React.FC = () => {
                     </div>
                   </div>
                   <Button
-                    className="gradient-primary mt-6 w-full hover:opacity-90"
+                    className="gradient-primary mt-6 w-full py-6 text-lg uppercase shadow-lg hover:opacity-90"
                     onClick={() => setShowKnowMorePopup(true)}
                   >
                     Know more about your cycle
@@ -723,13 +723,13 @@ const HomePage: React.FC = () => {
         <div className="container mx-auto px-4 text-center text-white/80">
           <p>&copy; {new Date().getFullYear()} FemFit. All rights reserved.</p>
           <p className="mt-1 text-sm">Built by Women for Women</p>
-          <Button
+          {/* <Button
             variant="outline"
             className="mx-auto mt-4 mb-6 flex items-center gap-2 border border-purple-200 bg-white/10 px-5 py-2 font-medium text-white shadow-sm hover:bg-white/30"
             onClick={handleLogout}
           >
             Logout
-          </Button>
+          </Button> */}
         </div>
       </footer>
     </div>

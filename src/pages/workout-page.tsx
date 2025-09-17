@@ -1,13 +1,12 @@
 import { UI_DELAY } from "@/utils/constants";
 import {
-  Play,
   Clock,
   Flame,
   HelpCircle,
   Target,
   Zap,
   Loader2,
-  Pause,
+  Waves,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -245,11 +244,11 @@ const WorkoutPage: React.FC = () => {
           {/* Warm-up */}
           <div>
             <div className="mb-1 flex items-center justify-between gap-3 px-5">
-              <Play className="h-5 w-5 fill-green-600 text-green-600" />
+              <Clock className="h-5 w-5 text-green-600" />
               <h3 className="flex flex-col items-center text-xl font-bold text-gray-800 md:flex-row md:gap-3">
                 WARM-UP <span className="text-lg font-semibold">(5 min)</span>
               </h3>
-              <Play className="h-5 w-5 fill-green-600 text-green-600" />
+              <Clock className="h-5 w-5 text-green-600" />
             </div>
             <div className="rounded-lg bg-green-100 p-4">
               <ul className="space-y-2 text-sm">
@@ -335,12 +334,12 @@ const WorkoutPage: React.FC = () => {
           {/* Cool-down */}
           <div>
             <div className="mb-1 flex items-center justify-between gap-3 px-5">
-              <Pause className="h-5 w-5 fill-blue-600 text-blue-600" />
+              <Waves className="h-5 w-5 text-blue-600" />
               <h3 className="flex flex-col items-center text-xl font-bold text-gray-800 md:flex-row md:gap-3">
                 Cool-DOWN
                 <span className="text-lg font-semibold">(5 min)</span>
               </h3>
-              <Pause className="h-5 w-5 fill-blue-600 text-blue-600" />
+              <Waves className="h-5 w-5 text-blue-600" />
             </div>
             <div className="rounded-lg bg-blue-50 p-4">
               <ul className="space-y-2 text-sm">

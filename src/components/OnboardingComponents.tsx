@@ -2,7 +2,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useEffect, useRef, useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
 import { Checkbox } from "@/components/ui/checkbox";
 
 const OnboardingQuestionCard: React.FC<{
@@ -182,14 +181,14 @@ const DateCard: React.FC<{
             />
           </div>
 
-          {dateVal && (
+          {/* {dateVal && (
             <p className="py-2 text-center text-lg font-semibold text-purple-700">
               Selected: {format(dateVal, "MMMM d, yyyy")}
             </p>
-          )}
+          )} */}
 
           {props?.placeholder && (
-            <p className="rounded-lg border-2 border-purple-700/50 p-2 text-center text-sm text-purple-700">
+            <p className="mt-5 rounded-lg border-2 border-purple-700/50 p-2 text-center text-sm text-purple-700">
               {props.placeholder}
             </p>
           )}
