@@ -143,7 +143,7 @@ const OnboardingPage: React.FC = () => {
           // setOnboardingQuestions(response.data.questions);
           // setTotalSteps(response.data.totalQuestions);
           setLoading(false);
-          navigate("/");
+          navigate("/home");
         }
       } catch (error) {
         console.error("Error submitting onboarding questions:", error);
@@ -337,7 +337,7 @@ const OnboardingPage: React.FC = () => {
           </div>
 
           <Button
-            className="gradient-primary mt-6 w-full max-w-md py-3 text-lg hover:opacity-90"
+            className="mt-6 h-12 w-full max-w-md bg-white text-lg font-bold text-purple-900 hover:opacity-90"
             onClick={handleSubmit}
             disabled={loading}
           >

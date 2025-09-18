@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import AuthPage from "@/pages/auth-page-tabs";
 import HomePage from "@/pages/home-page";
+import LandingPage from "@/pages/landing-page";
 import OnboardingPage from "@/pages/onboarding-page";
 import NotFound from "@/pages/not-found";
 import ResetPasswordPage from "@/pages/reset-password-page";
@@ -29,6 +30,7 @@ function AppContent() {
 
   // Determine visibility of header and footer
   const headerFooterVisible =
+    location.pathname !== "/" &&
     location.pathname !== "/auth" &&
     location.pathname !== "/onboarding" &&
     location.pathname !== "/reset-password";
@@ -43,7 +45,8 @@ function AppContent() {
     <>
       {headerFooterVisible && <Header />}
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/home" element={<HomePage />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/onboarding" element={<OnboardingPage />} />

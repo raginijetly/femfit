@@ -232,10 +232,10 @@ const UpdatePage: React.FC = () => {
           </div>
           <Button
             variant="ghost"
-            className="ml-auto px-3 py-2 text-lg text-white hover:bg-white/10"
-            onClick={() => navigate("/")}
+            className="ml-auto bg-white px-10 py-4 text-lg text-purple-600"
+            onClick={() => navigate("/home")}
           >
-            <ArrowLeft className="mr-1 size-4" /> Go Back to Home Page
+            <ArrowLeft className="mr-1 size-4" /> Back to Home
           </Button>
         </div>
         {/* Onboarding Questions */}

@@ -444,7 +444,9 @@ const HomePage: React.FC = () => {
                     <span className="text-sm text-gray-500">Current phase</span>
                     <div className="flex items-center">
                       {getPhaseIcon()}
-                      <span className="ml-2 text-lg font-medium text-gray-800">
+                      <span
+                        className={`ml-2 text-lg font-medium ${getPhaseColor()}`}
+                      >
                         {!!userInfo && userInfo.cyclePhase}
                       </span>
                     </div>
@@ -719,7 +721,7 @@ const HomePage: React.FC = () => {
       </main>
 
       {/* Footer */}
-      <footer className="mt-auto bg-white/10 py-6 pb-16 backdrop-blur-sm sm:pb-14">
+      <footer className="mt-auto bg-white/10 py-6 pb-20 backdrop-blur-sm">
         <div className="container mx-auto px-4 text-center text-white/80">
           <p>&copy; {new Date().getFullYear()} FemFit. All rights reserved.</p>
           <p className="mt-1 text-sm">Built by Women for Women</p>
